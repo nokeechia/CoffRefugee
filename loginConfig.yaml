@@ -1,10 +1,15 @@
-login: 
-    factory: "ns30:customerLoginParameters" 
+login:
+    factory: "ns30:customerLoginParameters"
     institutionID: 7010
     instrumentType: "R"
     institutionPassword: "7010VALORA"
     userProfile: "APPUSER"
     instrumentNo: "4047934000052141"
     password: "axiom"
-
-
+wsdlUrl:
+    url: "http://merit.axiomwebservices.com/MeritEChannelsAccessZurich/service.svc?wsdl"
+common:
+    responseLanguage: "en"
+campaignList:
+    factory: "ns30:getCampaignListParameters"
+    sourceChannel: "APP"
