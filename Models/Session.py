@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from decimal import Decimal
 from Models import Merchant, Customer
 from Models.Voucher import Voucher
