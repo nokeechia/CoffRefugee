@@ -1,4 +1,4 @@
-from CoffRefugee.Models import Customer
+from Models import Customer
 
 __author__ = 'Keech'
 import os
