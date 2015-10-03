@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Keech'
 
-from flask import Flask
+from flask import Flask,send_from_directory
 from Models.Session import Session
 import os
 import json
@@ -42,6 +42,13 @@ def getMerchants():
         s = json.dumps(m.__dict__)
         ms.append(s)
     return json.dumps(ms)
+
+@app.route('/webapp/<path:path>')
+def send_webapp(path):
+   if path:
+      return send_from_directory('webapp', path)
+   else: 
+      return send_from_directory('webapp', 'index.html')
 
 if __name__ == '__main__':
     app.debug = True
