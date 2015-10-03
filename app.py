@@ -1,6 +1,11 @@
+# -*- coding: utf-8 -*-
 __author__ = 'Keech'
 
+<<<<<<< HEAD
 from flask import Flask, request
+=======
+from flask import Flask,send_from_directory
+>>>>>>> master
 from Models.Session import Session
 import os
 import json
@@ -63,6 +68,7 @@ def getMerchants():
         ms.append(s)
     return json.dumps(ms)
 
+<<<<<<< HEAD
 @app.route('/addTransaction', methods=['POST'])
 def addTransaction():
     print("addTransaction")
@@ -77,6 +83,14 @@ def addTransaction():
     if currentItemCount  > 0:
         c['status'] = True
     return json.dumps(c)
+=======
+@app.route('/webapp/<path:path>')
+def send_webapp(path):
+   if path:
+      return send_from_directory('webapp', path)
+   else: 
+      return send_from_directory('webapp', 'index.html')
+>>>>>>> master
 
 if __name__ == '__main__':
     app.debug = True
