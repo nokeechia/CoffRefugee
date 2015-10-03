@@ -47,36 +47,36 @@ class Session:
 
 
     def getMerchants(self, client, b):
-        merchantList = client.factory.create('merchantListParams')
-        with openYaml() as stream:
-            data = yaml.load(stream)['login']
-        merchantList.institutionID = data["institutionID"]
-        merchantList.institutionPassword = data["institutionPassword"]
-        merchantList.userProfile = data["userProfile"]
-        with openYaml() as stream:
-            data = yaml.load(stream)['common']
-        merchantList.userProfile = data["responseLanguage"]
-        merchantListResponse = client.service.getMerchantList(merchantList)
-        ms = []
-        print(merchantListResponse)
-        for m in merchantListResponse.merchantListSetList.merchantListSet:
-            print(m)
-            print(dir(m))
-            with openYaml() as stream:
-                data = yaml.load(stream)['exampleLocations']
-            locations = list(data.keys())
-            print(locations)
-            location = locations[randint(0,5)]
-            print(location)
-            lat = data[location].split(",")[0]
-            print(lat)
-            lon = data[location].split(",")[1]
-            #print("%.2f" % float(m.merchantLatitude))
-            #TODO: issues with equality fixed by removal, as the location for all merchs are empty
-            #lat = m.merchantLatitude
-            #lon = m.merchantLongitude
-            currentMerch = Merchant.Merchant(m.merchantId,m.merchantName, m.merchantLogoThumbnail, lat, lon)
-            ms.append(currentMerch)
+        # merchantList = client.factory.create('merchantListParams')
+        # with openYaml() as stream:
+        #     data = yaml.load(stream)['login']
+        # merchantList.institutionID = data["institutionID"]
+        # merchantList.institutionPassword = data["institutionPassword"]
+        # merchantList.userProfile = data["userProfile"]
+        # with openYaml() as stream:
+        #     data = yaml.load(stream)['common']
+        # merchantList.userProfile = data["responseLanguage"]
+        # merchantListResponse = client.service.getMerchantList(merchantList)
+        # ms = []
+        # print(merchantListResponse)
+        # for m in merchantListResponse.merchantListSetList.merchantListSet:
+        #     print(m)
+        #     print(dir(m))
+        #     with openYaml() as stream:
+        #         data = yaml.load(stream)['exampleLocations']
+        #     locations = list(data.keys())
+        #     print(locations)
+        #     location = locations[randint(0,5)]
+        #     print(location)
+        #     lat = data[location].split(",")[0]
+        #     print(lat)
+        #     lon = data[location].split(",")[1]
+        #     #print("%.2f" % float(m.merchantLatitude))
+        #     #TODO: issues with equality fixed by removal, as the location for all merchs are empty
+        #     #lat = m.merchantLatitude
+        #     #lon = m.merchantLongitude
+        #     currentMerch = Merchant.Merchant(m.merchantId,m.merchantName, m.merchantLogoThumbnail, lat, lon)
+        #     ms.append(currentMerch)
         #return ms
         return returnMerchantJSON()
 
