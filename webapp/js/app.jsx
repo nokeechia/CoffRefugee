@@ -3,8 +3,10 @@
 
 const React = require("react");
 const Button = require("react-bootstrap/lib/Button");
+const ButtonGroup = require("react-bootstrap/lib/ButtonGroup");
 const Panel = require("react-bootstrap/lib/Panel");
 const Jumbotron = require("react-bootstrap/lib/Jumbotron");
+const Table = require("react-bootstrap/lib/Table");
 // React components
 
 class Header extends React.Component {
@@ -22,24 +24,150 @@ class Header extends React.Component {
 
 class BigButton extends React.Component {
    render() {
-      return <form action={this.props.link} method="get">
-         <Button type="submit" bsStyle="primary" bsSize="large" block>
+      return <Button onClick={this.props.handleClick} bsStyle={this.props.bsStyle} bsSize="large" block>
             {this.props.text}
          </Button>
-      </form>
-   
+   }
+}
+BigButton.defaultProps = {
+   bsStyle: "primary",
+}
+
+class ItemButton extends React.Component {
+   render() {
+      return <div className="btn-group">
+         <Button onClick={this.props.handleClick}>{this.props.children}</Button>
+      </div>
    }
 }
 
-class Transaction extends React.Component {
+class CurrentTransaction extends React.Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         selection: {}
+      }
+   }
+   handleSubmit() {
+      console.log('OH YEAH');
+      // Show a popup to propose coupon
+      // Update final price
+      // Submit transaction
+   }
+   formatString(item) {
+      return item.name+' - '+item.price+'.-';
+   }
+
+   handleItemSelection(id) {
+      var selection = this.state.selection
+      if(typeof selection[id]==='undefined') {
+         selection[id] = {
+            quantity: 1, 
+         }   
+      } else {
+         selection[id].quantity += 1;
+      }
+      this.setState({selection: selection})
+   } 
    render() {
+      var itemButtons = []; 
+      
+      for(var itemKey in this.props.availableItems) {
+         var item = this.props.availableItems[itemKey];
+         itemButtons.push(<ItemButton key={itemKey} handleClick={this.handleItemSelection.bind(this,itemKey)}>
+            { this.formatString(item) }
+         </ItemButton>) 
+      }
+
+      var rows = []; 
+      var total = 0;
+      for(var itemKey in this.state.selection) {
+         var item = this.props.availableItems[itemKey];
+         var selection = this.state.selection[itemKey];
+         var itemTotal = selection.quantity*item.price;
+         total += itemTotal;
+         rows.push(<tr key={itemKey}>
+            <td>{itemKey}</td>
+            <td>{item.name}</td>          
+            <td>{item.price.toFixed(2)}</td>          
+            <td>{selection.quantity}</td>          
+            <td>{itemTotal.toFixed(2)}</td>          
+         </tr>)
+      }
+      return <div>
+         <h3>Transaction in progress</h3>
+         <ButtonGroup justified>
+            {itemButtons}
+         </ButtonGroup>
+            
+         <br/>
+         <div>
+            <Table striped bordered condensed hover>
+               <thead>
+                  <tr key='first'><th>ID</th><th>Name</th><th>Unit Price</th><th>Quantity</th><th>Total Price</th></tr>
+               </thead>
+               <tbody>
+                  {rows}
+               </tbody>
+               <tfoot>
+                  <tr key='last'><th colSpan={4}>Total</th><th>{total.toFixed(2)}</th></tr>
+               </tfoot>
+            </Table>
+         </div>
+         <br/>
+         <div>
+            <BigButton handleClick={this.handleSubmit.bind(this)} 
+                       text="Submit transaction"/>
+            <br/>
+            <BigButton handleClick={this.props.handleCancel} 
+                       text="Cancel transaction"
+                       bsStyle="danger"/>
+         </div>
+      </div>
+           
+   }
+}
+CurrentTransaction.defaultProps = {
+   availableItems: {
+      123: { name:'Coffee',price:1.80}, 
+      342: { name:'Orange Juice',price:5.0}, 
+      567: { name:'Croissant',price:3.80}, 
+      367: { name:'Bretzel',price:3.80}, 
+   }
+}
+
+class TransactionContainer extends React.Component {
+   constructor(props) {
+      super(props);
+      this.state = { transactionInProgress:false}
+   }
+
+   newTransaction() {
+      this.setState({transactionInProgress:true});
+   }
+
+   cancelTransaction() {
+      this.setState({transactionInProgress:false});
+   }
+
+   render() {
+      var transactElem = null;
+      if(this.state.transactionInProgress) {
+         // A transaction is in progress
+         transactElem = <CurrentTransaction handleCancel={this.cancelTransaction.bind(this)} />
+      } else {
+         // Propose to create a new transaction
+          transactElem = <BigButton 
+            handleClick={this.newTransaction.bind(this)} 
+            text='New Transaction'/>
+      }
       return <Panel className="semi-transparent">
-         Transaction logic goes here!
+         {transactElem}
       </Panel> 
    }
 }
 
-class Source extends React.Component {
+class Footer extends React.Component {
    render() {
       return <Panel className="semi-transparent text-center">
          HackZurich 2015 - Proof of Concept - 
@@ -54,10 +182,10 @@ class Page extends React.Component {
     return <div>
        <div className="container bodyContainer">
          <Header />
-         <Transaction />
+         <TransactionContainer />
        </div>
        <div className="container">
-         <Source /> 
+         <Footer /> 
        </div>
     </div>
   }
