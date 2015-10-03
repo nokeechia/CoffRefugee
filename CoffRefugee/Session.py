@@ -17,13 +17,13 @@ class Session:
     merchants =[]
 
     def __init__(self):
-        with open('loginConfig.yaml','r') as stream:
+        with open('Config.yaml','r') as stream:
             data = yaml.load(stream)['wsdlUrl']
         self.url = data["url"]
 
     def login(self):
         client = Client(self.url)
-        with open('loginConfig.yaml','r') as stream:
+        with open('Config.yaml','r') as stream:
           data = yaml.load(stream)['login']
         customerLogin = client.factory.create(data["factory"])
         customerLogin.institutionID = data["institutionID"]
@@ -41,12 +41,12 @@ class Session:
     def getMerchants(self):
         client = Client(self.url)
         merchantList = client.factory.create('merchantListParams')
-        with open('loginConfig.yaml','r') as stream:
+        with open('Config.yaml','r') as stream:
             data = yaml.load(stream)['login']
         merchantList.institutionID = data["institutionID"]
         merchantList.institutionPassword = data["institutionPassword"]
         merchantList.userProfile = data["userProfile"]
-        with open('loginConfig.yaml','r') as stream:
+        with open('Config.yaml','r') as stream:
             data = yaml.load(stream)['common']
         merchantList.userProfile = data["responseLanguage"]
         merchantListResponse = client.service.getMerchantList(merchantList)

@@ -30,7 +30,7 @@ except ImportError:
 class Campaign:
 
     def __init__(self):
-        with open('loginConfig.yaml','r') as stream:
+        with open('Config.yaml','r') as stream:
           data = yaml.load(stream)['login']
         self.institutionID = data["institutionID"]
         self.instrumentType = data["instrumentType"]
@@ -40,22 +40,22 @@ class Campaign:
 
 
     def login(self):
-        with open('loginConfig.yaml','r') as stream:
+        with open('Config.yaml','r') as stream:
             data = yaml.load(stream)['wsdlUrl']
         url = data["url"]
         client = Client(url)
-        with open('loginConfig.yaml','r') as stream:
+        with open('Config.yaml','r') as stream:
           data = yaml.load(stream)['campaignList']
         CampaignList = client.factory.create(data["factory"])
         CampaignList.sourceChannel = data["sourceChannel"]
-        with open('loginConfig.yaml','r') as stream:
+        with open('Config.yaml','r') as stream:
           data = yaml.load(stream)['login']
         CampaignList.institutionID = data["institutionID"]
         CampaignList.instrumentType = data["instrumentType"]
         CampaignList.institutionPassword = data["institutionPassword"]
         CampaignList.userProfile = data["userProfile"]
 
-        with open('loginConfig.yaml','r') as stream:
+        with open('Config.yaml','r') as stream:
             data = yaml.load(stream)['common']
         CampaignList.userProfile = data["responseLanguage"]
         return client.service.getCampaignList(CampaignList)
