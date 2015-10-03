@@ -1,3 +1,4 @@
+from decimal import Decimal
 from CoffRefugee.Models import Merchant, Customer
 from CoffRefugee.Models.Voucher import Voucher
 
@@ -7,7 +8,6 @@ try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
     from yaml import Loader, Dumper
-from suds.client import Client
 import json
 from CoffRefugee.Models import Merchant,Customer,Voucher
 from os import path
@@ -32,8 +32,7 @@ class Session:
             data = yaml.load(stream)['wsdlUrl']
         self.url = data["url"]
 
-    def login(self):
-        client = Client(self.url)
+    def login(self, client):
         with openYaml() as stream:
           data = yaml.load(stream)['login']
         customerLogin = client.factory.create(data["factory"])
@@ -49,8 +48,7 @@ class Session:
         return customer
 
 
-    def getMerchants(self):
-        client = Client(self.url)
+    def getMerchants(self, client):
         merchantList = client.factory.create('merchantListParams')
         with openYaml() as stream:
             data = yaml.load(stream)['login']
@@ -66,15 +64,24 @@ class Session:
         for m in merchantListResponse.merchantListSetList.merchantListSet:
             print(m)
             print(dir(m))
-            currentMerch = Merchant.Merchant(m.merchantId,m.merchantName, m.merchantLogoThumbnail, m.merchantLatitude, m.merchantLongitude)
+            with openYaml() as stream:
+                data = yaml.load(stream)['exampleLocations']
+            lat = data["ruschlikonLoc"].split(",")[0]
+            lon = data["ruschlikonLoc"].split(",")[1]
+            print(Decimal(m.merchantLatitude))
+            print("%.2f" % float(m.merchantLatitude))
+            if Decimal(m.merchantLatitude) is not 0.00:
+                lat = m.merchantLatitude
+            if Decimal(m.merchantLongitude) is not 0.00:
+                lon = m.merchantLongitude
+            currentMerch = Merchant.Merchant(m.merchantId,m.merchantName, m.merchantLogoThumbnail, lat, lon)
             ms.append(currentMerch)
         return ms
 
-    def getCampaigns(self):
+    def getCampaigns(self, client):
         with openYaml() as stream:
             data = yaml.load(stream)['wsdlUrl']
         url = data["url"]
-        client = Client(url)
         with openYaml() as stream:
           data = yaml.load(stream)['campaignList']
         campaignList = client.factory.create(data["factory"])
@@ -93,11 +100,10 @@ class Session:
             print(c)
             print(c.campaignId)
 
-    def createVoucher(self):
+    def createVoucher(self, client):
         with openYaml() as stream:
             data = yaml.load(stream)['wsdlUrl']
         url = data["url"]
-        client = Client(url)
         with openYaml() as stream:
           data = yaml.load(stream)['voucher']
         voucherReq = client.factory.create(data["factory"])
