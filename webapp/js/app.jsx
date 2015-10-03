@@ -1,4 +1,3 @@
-
 "use strict"
 
 const React = require("react");
@@ -7,6 +6,7 @@ const ButtonGroup = require("react-bootstrap/lib/ButtonGroup");
 const Panel = require("react-bootstrap/lib/Panel");
 const Jumbotron = require("react-bootstrap/lib/Jumbotron");
 const Table = require("react-bootstrap/lib/Table");
+const Modal = require("react-bootstrap/lib/Modal")
 // React components
 
 class Header extends React.Component {
@@ -25,10 +25,11 @@ class Header extends React.Component {
 class BigButton extends React.Component {
    render() {
       return <Button onClick={this.props.handleClick} bsStyle={this.props.bsStyle} bsSize="large" block>
-            {this.props.text}
+            {this.props.children}
          </Button>
    }
 }
+
 BigButton.defaultProps = {
    bsStyle: "primary",
 }
@@ -48,34 +49,33 @@ class CurrentTransaction extends React.Component {
          selection: {}
       }
    }
+
    handleSubmit() {
       console.log('OH YEAH');
       // Show a popup to propose coupon
       // Update final price
       // Submit transaction
    }
-   formatString(item) {
-      return item.name+' - '+item.price+'.-';
-   }
 
-   handleItemSelection(id) {
-      var selection = this.state.selection
-      if(typeof selection[id]==='undefined') {
-         selection[id] = {
-            quantity: 1, 
-         }   
-      } else {
-         selection[id].quantity += 1;
-      }
-      this.setState({selection: selection})
-   } 
    render() {
+      let handleItemSelection = id => {
+         var selection = this.state.selection
+         if(typeof selection[id]==='undefined') {
+            selection[id] = {
+               quantity: 1, 
+            }   
+         } else {
+            selection[id].quantity += 1;
+         }
+         this.setState({selection: selection})
+      } 
+      let formatString = item => item.name+' - '+item.price+'.-';
       var itemButtons = []; 
       
       for(var itemKey in this.props.availableItems) {
          var item = this.props.availableItems[itemKey];
-         itemButtons.push(<ItemButton key={itemKey} handleClick={this.handleItemSelection.bind(this,itemKey)}>
-            { this.formatString(item) }
+         itemButtons.push(<ItemButton key={itemKey} handleClick={handleItemSelection.bind(null,itemKey)}>
+            { formatString(item) }
          </ItemButton>) 
       }
 
@@ -116,17 +116,17 @@ class CurrentTransaction extends React.Component {
          </div>
          <br/>
          <div>
-            <BigButton handleClick={this.handleSubmit.bind(this)} 
-                       text="Submit transaction"/>
+            <BigButton handleClick={this.handleSubmit.bind(this)}>"Submit transaction"</BigButton>
             <br/>
-            <BigButton handleClick={this.props.handleCancel} 
-                       text="Cancel transaction"
-                       bsStyle="danger"/>
+            <BigButton handleClick={this.props.handleCancel} bsStyle="danger">
+               Cancel transaction
+            </BigButton>
          </div>
       </div>
            
    }
 }
+
 CurrentTransaction.defaultProps = {
    availableItems: {
       123: { name:'Coffee',price:1.80}, 
@@ -141,25 +141,17 @@ class TransactionContainer extends React.Component {
       super(props);
       this.state = { transactionInProgress:false}
    }
-
-   newTransaction() {
-      this.setState({transactionInProgress:true});
-   }
-
-   cancelTransaction() {
-      this.setState({transactionInProgress:false});
-   }
-
    render() {
+      let cancelTransaction = () => this.setState({transactionInProgress:false});
+      let newTransaction = () => this.setState({transactionInProgress:true});
+
       var transactElem = null;
       if(this.state.transactionInProgress) {
          // A transaction is in progress
-         transactElem = <CurrentTransaction handleCancel={this.cancelTransaction.bind(this)} />
+         transactElem = <CurrentTransaction handleCancel={cancelTransaction} />
       } else {
          // Propose to create a new transaction
-          transactElem = <BigButton 
-            handleClick={this.newTransaction.bind(this)} 
-            text='New Transaction'/>
+          transactElem = <BigButton handleClick={newTransaction}>New Transaction</BigButton>
       }
       return <Panel className="semi-transparent">
          {transactElem}
