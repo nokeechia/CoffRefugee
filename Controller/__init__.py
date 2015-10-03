@@ -1,27 +1,40 @@
 __author__ = 'Keech'
 
 from flask import Flask
-from CoffRefugee.Models.Session import Session
+from Models.Session import Session
 import os
 import json
+from suds.client import Client
+from settings import APP_ROOT, openYaml
+import yaml
+
 app = Flask(__name__)
 Session = Session()
+with openYaml() as stream:
+    data = yaml.load(stream)['wsdlUrl']
+aUrl = data["aUrl"]
+aClient = Client(aUrl)
+tUrl = data["tUrl"]
+tClient= Client(tUrl)
 
 
 @app.route('/')
 def init():
     print("YAY")
-    return "SWAG"
+    c = {'status': False}
+    if aClient is not None:
+        c['status'] = True
+    return json.dumps(c)
 
 @app.route('/login')
 def login():
-    user = Session.login()
+    user = Session.login(aClient)
     s = json.dumps(user.__dict__)
     return s
 
 @app.route('/getMerchants')
 def getMerchants():
-    merchants = Session.getMerchants()
+    merchants = Session.getMerchants(aClient)
     ms =[]
     s = None
     for m in merchants:

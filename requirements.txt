@@ -1,0 +1,12 @@
+Flask==0.10.1
+Jinja2==2.7.3
+PyYAML==3.11
+Werkzeug==0.10.4
+httplib2==0.9.1
+pyaml==15.8.2
+pyasn1==0.1.8
+pyasn1-modules==0.0.6
+requests==2.7.0
+simplejson==3.8.0
+suds-jurko==0.6
+urllib3==1.12
