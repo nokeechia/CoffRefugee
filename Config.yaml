@@ -1,0 +1,31 @@
+login:
+    factory: "ns30:customerLoginParameters"
+    institutionID: 7010
+    instrumentType: "R"
+    institutionPassword: "7010VALORA"
+    userProfile: "APPUSER"
+    instrumentNo: "4047934000052141"
+    password: "axiom"
+wsdlUrl:
+    aUrl: "http://merit.axiomwebservices.com/MeritEChannelsAccessZurich/service.svc?wsdl"
+    tUrl: "http://merit.axiomwebservices.com/MeritEChannelsTransactionsZurich/service.svc?wsdl"
+common:
+    responseLanguage: "en"
+campaignList:
+    factory: "ns30:getCampaignListParameters"
+    sourceChannel: "APP"
+voucher:
+    factory: "ns30:createVoucherParams"
+    sourceChannel: "APP"
+    customerInternalNo: 2100
+    validityMode: "MFRC"
+    validityDuration: 3
+    itemBarcode: "0001000076099000"
+    rewardType: "FI"
+exampleLocations:
+    ruschlikonLoc: "47.307070,8.555238"
+    zurichHBLoc: "47.377721,8.540765"
+    zugHBLoc: "47.176453,8.515959"
+    ManeggLoc: "47.338653,8.519737"
+    SelnaiuLoc: "47.372996,8.532346"
+    StettbachLoc: "47.397067,8.596108"
