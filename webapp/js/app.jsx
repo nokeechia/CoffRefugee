@@ -42,11 +42,56 @@ class ItemButton extends React.Component {
    }
 }
 
+class TransactionConfirmationModal extends React.Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         coffeeOnHold:false
+      }
+   }
+   render() {
+      let totalToPay = this.props.total;
+      if(this.state.coffeeOnHold) {
+         totalToPay += this.props.coffeePrice;
+      }
+      let handleYesClick = () => this.setState({coffeeOnHold:true});
+      let handleNoClick = () => this.setState({coffeeOnHold:false});
+      return <Modal show={this.props.show} onHide={this.props.handleClose}>
+         <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title">Confirm Payment</Modal.Title>
+         </Modal.Header>
+         <Modal.Body>
+            <p>Total to pay: <strong>{this.props.total.toFixed(2)} CHF</strong> </p>
+            <p>Would you want to put a coffee on hold for a person in need? </p> 
+            <ButtonGroup>
+               <Button 
+                  bsStyle={this.state.coffeeOnHold?"primary":"default"} 
+                  onClick={handleYesClick}>Yes ({this.props.coffeePrice+'.-'})</Button>
+               <Button 
+                  bsStyle={this.state.coffeeOnHold?"default":"primary"} 
+                  onClick={handleNoClick}>No (0.-)</Button>
+            </ButtonGroup>
+            <br/>
+         </Modal.Body>
+         <Modal.Footer>
+            <Button bsStyle='success'>Pay ({totalToPay.toFixed(2)})</Button>
+            <Button onClick={this.props.handleClose}>Close</Button>
+         </Modal.Footer>
+      </Modal> 
+   }
+}
+TransactionConfirmationModal.defaultProps = {
+   total: 0, 
+   coffeePrice: 2.80,
+   show: false, 
+}
+
 class CurrentTransaction extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
-         selection: {}
+         selection: {},
+         showConfirmModal: false,
       }
    }
 
@@ -67,9 +112,11 @@ class CurrentTransaction extends React.Component {
          } else {
             selection[id].quantity += 1;
          }
-         this.setState({selection: selection})
+         this.setState({selection: selection});
       } 
-      let formatString = item => item.name+' - '+item.price+'.-';
+      let formatString = item => (item.name+' - '+item.price+'.-');
+      let handleSubmit = () => this.setState({showConfirmModal: true});
+      let handleCloseModal = () => this.setState({showConfirmModal: false});
       var itemButtons = []; 
       
       for(var itemKey in this.props.availableItems) {
@@ -116,12 +163,17 @@ class CurrentTransaction extends React.Component {
          </div>
          <br/>
          <div>
-            <BigButton handleClick={this.handleSubmit.bind(this)}>"Submit transaction"</BigButton>
+            <BigButton handleClick={handleSubmit}>Submit transaction</BigButton>
             <br/>
             <BigButton handleClick={this.props.handleCancel} bsStyle="danger">
                Cancel transaction
             </BigButton>
          </div>
+         <TransactionConfirmationModal 
+            total={total}
+            show={this.state.showConfirmModal} 
+            handleClose={handleCloseModal}
+            />
       </div>
            
    }
