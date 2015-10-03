@@ -12,7 +12,7 @@ import json
 from Models import Merchant,Customer,Voucher
 from os import path
 import os
-from settings import APP_ROOT,openYaml
+from settings import APP_ROOT,openYaml, returnMerchantJSON
 
 
 class Session:
@@ -40,6 +40,7 @@ class Session:
         customerLogin.instrumentNo = data["instrumentNo"]
         customerLogin.password = data['password']
         customerLoginResponse = client.service.customerLogin(customerLogin)
+        print(data["institutionPassword"])
         print(customerLoginResponse)
         customer = Customer.Customer(customerLoginResponse.customerLoginOutputs.firstName, customerLoginResponse.customerLoginOutputs.lastName, customerLoginResponse.customerLoginOutputs.email, customerLoginResponse.customerLoginOutputs.internalCustomerNo)
         return customer
@@ -75,8 +76,8 @@ class Session:
             #lat = m.merchantLatitude
             #lon = m.merchantLongitude
             currentMerch = Merchant.Merchant(m.merchantId,m.merchantName, m.merchantLogoThumbnail, lat, lon)
-            ms.append(currentMerch)
-        return ms
+        #return ms
+        return returnMerchantJSON()
 
     def getCampaigns(self, client):
         with openYaml() as stream:
