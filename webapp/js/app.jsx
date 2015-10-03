@@ -1,5 +1,6 @@
 "use strict"
 
+const $ = require("jquery")
 const React = require("react");
 const Button = require("react-bootstrap/lib/Button");
 const ButtonGroup = require("react-bootstrap/lib/ButtonGroup");
@@ -211,6 +212,40 @@ class TransactionContainer extends React.Component {
    }
 }
 
+class VoucherContainer extends React.Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         showRedeemModal: false
+      }
+   }
+   render() {
+      let showModal = () => this.setState({showRedeemModal: true});
+      let hideModal = () => this.setState({showRedeemModal: false});
+      let handleConfirm = () => {
+         console.log("A coffee was consumed!");
+         hideModal();
+      }
+      return <Panel className="semi-transparent">
+         <BigButton handleClick={showModal}>Redeem Voucher in Pool</BigButton>
+         <Modal show={this.state.showRedeemModal} onHide={hideModal}>
+            <Modal.Header closeButton>
+               <Modal.Title id="contained-modal-title">Confirm Gift</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+               <p>Current number of coffees on hold: <strong>{this.props.coffeesInPool}</strong> </p>
+               <p>Are you sure you want a coffee from the pool? </p> 
+            </Modal.Body>
+            <Modal.Footer>
+               <Button onClick={handleConfirm} bsStyle='success'>Yes! Get a coffee!</Button>
+               <Button onClick={this.props.handleClose}>Abandon</Button>
+            </Modal.Footer>
+         </Modal>
+      </Panel>
+   }
+}
+VoucherContainer.defaultProps = {coffeesInPool: 7,}
+
 class Footer extends React.Component {
    render() {
       return <Panel className="semi-transparent text-center">
@@ -227,6 +262,7 @@ class Page extends React.Component {
        <div className="container bodyContainer">
          <Header />
          <TransactionContainer />
+         <VoucherContainer />
        </div>
        <div className="container">
          <Footer /> 
@@ -238,3 +274,6 @@ class Page extends React.Component {
 React.render(<Page/>,document.getElementById('container'));
 // Render the page as soon as the page loads, to show all information already present
 
+var webServerAPI = 'http://52.89.240.130:5000'
+
+$.get(webServerAPI,console.log)
