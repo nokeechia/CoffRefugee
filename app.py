@@ -56,6 +56,7 @@ def getMerchants():
     merchants = Session.getMerchants(aClient, b)
     ms =[]
     s = None
+    print(merchants[merchants.keys()[0]])
     for m in merchants:
         print(m.__class__)
         s = json.dumps(m)
