@@ -49,7 +49,6 @@ class TransactionConfirmationModal extends React.Component {
          coffeeOnHold:false
       }
    }
-<<<<<<< HEAD
    render() {
       let totalToPay = this.props.total;
       if(this.state.coffeeOnHold) {
@@ -96,8 +95,6 @@ class CurrentTransaction extends React.Component {
       }
    }
 
-=======
-
    handleSubmit() {
       console.log('OH YEAH');
       // Show a popup to propose coupon
@@ -105,7 +102,6 @@ class CurrentTransaction extends React.Component {
       // Submit transaction
    }
 
->>>>>>> origin/master
    render() {
       let handleItemSelection = id => {
          var selection = this.state.selection
@@ -116,18 +112,11 @@ class CurrentTransaction extends React.Component {
          } else {
             selection[id].quantity += 1;
          }
-<<<<<<< HEAD
          this.setState({selection: selection});
       } 
       let formatString = item => (item.name+' - '+item.price+'.-');
       let handleSubmit = () => this.setState({showConfirmModal: true});
       let handleCloseModal = () => this.setState({showConfirmModal: false});
-         
-=======
-         this.setState({selection: selection})
-      } 
-      let formatString = item => item.name+' - '+item.price+'.-';
->>>>>>> origin/master
       var itemButtons = []; 
       
       for(var itemKey in this.props.availableItems) {
