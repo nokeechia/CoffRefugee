@@ -39,7 +39,7 @@ class Campaign:
 
 
 
-    def login(self):
+    def getCampaignList(self):
         with open('Config.yaml','r') as stream:
             data = yaml.load(stream)['wsdlUrl']
         url = data["url"]
@@ -54,7 +54,6 @@ class Campaign:
         CampaignList.instrumentType = data["instrumentType"]
         CampaignList.institutionPassword = data["institutionPassword"]
         CampaignList.userProfile = data["userProfile"]
-
         with open('Config.yaml','r') as stream:
             data = yaml.load(stream)['common']
         CampaignList.userProfile = data["responseLanguage"]
