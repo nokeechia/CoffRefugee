@@ -11,7 +11,10 @@ To begin, start the backend by running the following script with python 3.4: `ap
 
 You can access the two web applications from the following URLs:
 
-## Retail web app: 
+## Python backend
+Connect to the Merit API in order to manage coupons.
+
+## Retail web app
 Simulate a purshase or a voucher redemption. 
 
 You can simulate a "gifting" event by using the "Redeem Voucher in Pool" button on the POS app.
