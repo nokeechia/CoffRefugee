@@ -19,9 +19,7 @@ http://nckr.azurewebsites.net/
 The first lets you simulate a purchase.
 The second, shows infomation about Merchants and vouchers.
 
-You can simulate a "gift" event by navigating to the backend, and the following:
-
-hostingSite:5000/redeemCoffeeOnHold
+You can simulate a "gifting" event by using the "Redeem Voucher in Pool" button on the POS app.
 
 Example of the web based location site:
 ![alt text](http://i.imgur.com/qd3X6vT.png "Geo Location of different merchants")
