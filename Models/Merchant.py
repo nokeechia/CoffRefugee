@@ -13,8 +13,6 @@ class Merchant:
     merchantLatitude = ""
     merchantLongitude = ""
 
-
-
     def __init__(self, merchantId,merchantName,merchantLogoThumbnail, merchantLatitude,merchantLongitude ):
         self.merchantId = merchantId
         self.merchantName = merchantName

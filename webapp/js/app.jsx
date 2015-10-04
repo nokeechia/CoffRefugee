@@ -2,6 +2,7 @@
 
 const $ = require("jquery")
 const React = require("react");
+const Alert = require("react-bootstrap/lib/Alert")
 const Button = require("react-bootstrap/lib/Button");
 const ButtonGroup = require("react-bootstrap/lib/ButtonGroup");
 const Panel = require("react-bootstrap/lib/Panel");
@@ -47,7 +48,8 @@ class TransactionConfirmationModal extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
-         coffeeOnHold:false
+         coffeeOnHold:false,
+         alertContent: "",
       }
    }
    render() {
@@ -57,6 +59,33 @@ class TransactionConfirmationModal extends React.Component {
       }
       let handleYesClick = () => this.setState({coffeeOnHold:true});
       let handleNoClick = () => this.setState({coffeeOnHold:false});
+      let startTransaction = () => {
+         $.ajax({
+            url: '/addTransaction', 
+            method: 'POST', 
+            data: {
+               originalPrice: this.props.total,  
+               coffeeOnHold: this.state.coffeeOnHold, 
+               totalPaid: totalToPay, 
+            }, 
+            success: m => {
+               this.setState({
+                  alertContent: <Alert dismissAfter={2000} bsStyle='success'>Success!</Alert>
+               })
+               window.setTimeout(this.props.handleClose,2500)
+            }, 
+            error: e => {
+               this.setState({
+                  alertContent: <Alert dismissAfter={2000} bsStyle='danger'>Error: {e}</Alert>
+               })
+               window.setTimeout(this.props.handleClose,2500)
+            }
+         },this)
+      }
+      let alert = null; 
+      if(this.state.alertContent!=="") {
+         alert = this.state.alertContent;
+      }
       return <Modal show={this.props.show} onHide={this.props.handleClose}>
          <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title">Confirm Payment</Modal.Title>
@@ -73,9 +102,10 @@ class TransactionConfirmationModal extends React.Component {
                   onClick={handleNoClick}>No (0.-)</Button>
             </ButtonGroup>
             <br/>
+            {alert}
          </Modal.Body>
          <Modal.Footer>
-            <Button bsStyle='success'>Pay ({totalToPay.toFixed(2)})</Button>
+            <Button bsStyle='success' onClick={startTransaction}>Pay ({totalToPay.toFixed(2)})</Button>
             <Button onClick={this.props.handleClose}>Close</Button>
          </Modal.Footer>
       </Modal> 

@@ -1,6 +1,6 @@
 __author__ = 'Keech'
 
-from flask import Flask,send_from_directory
+from flask import Flask,send_from_directory,request
 from Models.Session import Session
 import os
 import json
@@ -8,7 +8,6 @@ from suds.client import Client
 from settings import APP_ROOT, openYaml
 import yaml
 from urllib import error
-
 
 app = Flask(__name__)
 Session = Session()
@@ -65,17 +64,11 @@ def getMerchants():
 
 @app.route('/addTransaction', methods=['POST'])
 def addTransaction():
-    print("addTransaction")
-    byte = request.get_data()
-    print(byte)
-    data = byte.decode('ascii')
+    print('yo')
+    print(request.form)
+    data = json.loads(request.form['coffeeOnHold'])
     print(data)
-    print(data.__class__)
-    rh = json.loads(data)[0]
-    c = {'status': False}
-    currentItemCount = len(rh.keys())
-    if currentItemCount  > 0:
-        c['status'] = True
+    c = {'status':data}
     return json.dumps(c)
 
 @app.route('/webapp/<path:path>')
@@ -86,5 +79,4 @@ def send_webapp(path):
       return send_from_directory('webapp', 'index.html')
 
 if __name__ == '__main__':
-    app.debug = True
     app.run()
