@@ -74,7 +74,8 @@ class TransactionConfirmationModal extends React.Component {
                   alertContent: <Alert dismissAfter={2000} bsStyle='success'>Success!</Alert>
                })
                renderPage(m)
-               window.setTimeout(this.props.handleClose,2500)
+               window.setTimeout(this.props.handleClose,2500);
+               window.setTimeout(this.props.handleCancel,2700);
             }, 
             error: e => {
                this.setState({
@@ -204,6 +205,7 @@ class CurrentTransaction extends React.Component {
          </div>
          <TransactionConfirmationModal 
             total={total}
+            handleCancel={this.props.handleCancel}
             show={this.state.showConfirmModal} 
             handleClose={handleCloseModal}
             />
@@ -221,6 +223,57 @@ CurrentTransaction.defaultProps = {
    }
 }
 
+class VoucherContainer extends React.Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         showRedeemModal: false,
+         alertContent: null, 
+      }
+   }
+   render() {
+      let showModal = () => this.setState({showRedeemModal: true});
+      let hideModal = () => this.setState({showRedeemModal: false});
+      let handleConfirm = () => {
+         $.ajax({
+            url: '/redeemCoffeeOnHold', 
+            method: 'POST', 
+            success: m => {
+               this.setState({
+                  alertContent: <Alert dismissAfter={2000} bsStyle='success'>Success!</Alert>
+               })
+               renderPage(m);
+               window.setTimeout(hideModal,2500)
+            }, 
+            error: e => {
+               this.setState({
+                  alertContent: <Alert dismissAfter={2000} bsStyle='danger'>Error: {e}</Alert>
+               })
+               window.setTimeout(hideModal,2500)
+            }
+         },this)
+      }
+      return <div>
+         <BigButton handleClick={showModal}>Redeem Voucher in Pool</BigButton>
+         <Modal show={this.state.showRedeemModal} onHide={hideModal}>
+            <Modal.Header closeButton>
+               <Modal.Title id="contained-modal-title">Confirm Gift</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+               <p>Current number of coffees on hold: <strong>{this.props.coffeesInPool}</strong> </p>
+               <p>Are you sure you want a coffee from the pool? </p> 
+               {this.state.alertContent}
+            </Modal.Body>
+            <Modal.Footer>
+               <Button onClick={handleConfirm} bsStyle='success'>Yes! Get a coffee!</Button>
+               <Button onClick={this.props.handleClose}>Abandon</Button>
+            </Modal.Footer>
+         </Modal>
+      </div>
+   }
+}
+VoucherContainer.defaultProps = {coffeesInPool: 7,}
+
 class TransactionContainer extends React.Component {
    constructor(props) {
       super(props);
@@ -236,7 +289,11 @@ class TransactionContainer extends React.Component {
          transactElem = <CurrentTransaction handleCancel={cancelTransaction} />
       } else {
          // Propose to create a new transaction
-          transactElem = <BigButton handleClick={newTransaction}>New Transaction</BigButton>
+          transactElem = <div>
+               <BigButton handleClick={newTransaction}>New Transaction</BigButton>
+               <br/>
+               <VoucherContainer coffeesInPool={this.props.coffeesOnHold}/>
+            </div>
       }
       return <Panel className="semi-transparent">
          {transactElem}
@@ -244,54 +301,6 @@ class TransactionContainer extends React.Component {
    }
 }
 
-class VoucherContainer extends React.Component {
-   constructor(props) {
-      super(props);
-      this.state = {
-         showRedeemModal: false
-      }
-   }
-   render() {
-      let showModal = () => this.setState({showRedeemModal: true});
-      let hideModal = () => this.setState({showRedeemModal: false});
-      let handleConfirm = () => {
-         $.ajax({
-            url: '/redeemCoffeeOnHold', 
-            method: 'POST', 
-            success: m => {
-               this.setState({
-                  alertContent: <Alert dismissAfter={2000} bsStyle='success'>Success!</Alert>
-               })
-               renderPage(m)
-               window.setTimeout(this.props.handleClose,2500)
-            }, 
-            error: e => {
-               this.setState({
-                  alertContent: <Alert dismissAfter={2000} bsStyle='danger'>Error: {e}</Alert>
-               })
-               window.setTimeout(this.props.handleClose,2500)
-            }
-         },this)
-      }
-      return <Panel className="semi-transparent">
-         <BigButton handleClick={showModal}>Redeem Voucher in Pool</BigButton>
-         <Modal show={this.state.showRedeemModal} onHide={hideModal}>
-            <Modal.Header closeButton>
-               <Modal.Title id="contained-modal-title">Confirm Gift</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-               <p>Current number of coffees on hold: <strong>{this.props.coffeesInPool}</strong> </p>
-               <p>Are you sure you want a coffee from the pool? </p> 
-            </Modal.Body>
-            <Modal.Footer>
-               <Button onClick={handleConfirm} bsStyle='success'>Yes! Get a coffee!</Button>
-               <Button onClick={this.props.handleClose}>Abandon</Button>
-            </Modal.Footer>
-         </Modal>
-      </Panel>
-   }
-}
-VoucherContainer.defaultProps = {coffeesInPool: 7,}
 
 class Footer extends React.Component {
    render() {
@@ -310,7 +319,6 @@ class Page extends React.Component {
        <div className="container bodyContainer">
          <Header coffeesOnHold={this.props.coffeesOnHold}/>
          <TransactionContainer />
-         <VoucherContainer coffeesInPool={this.props.coffeesOnHold}/>
        </div>
        <div className="container">
          <Footer /> 
