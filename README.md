@@ -24,4 +24,4 @@ You can simulate a "gift" event by navigating to the backend, and the following:
 hostingSite:5000/redeemCoffeeOnHold
 
 Example of the web based location site:
-![alt text](http://i.imgur.com/w82oVhz.png "Geo Location of different merchants")
+![alt text](http://i.imgur.com/qd3X6vT.png "Geo Location of different merchants")
