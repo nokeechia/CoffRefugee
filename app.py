@@ -66,7 +66,7 @@ def getMerchants():
 def addTransaction():
     data = json.loads(request.form['coffeeOnHold'])
     c = {'status':data}
-    _coffeesOnHold = coffeesOnHold+1
+    _coffeesOnHold = _coffeesOnHold+1
     return str(_coffeesOnHold)
 
 @app.route('/redeemCoffeeOnHold', methods=["POST"])
