@@ -78,5 +78,12 @@ def send_webapp(path):
    else: 
       return send_from_directory('webapp', 'index.html')
 
+@app.route('/frontend/<path:path>')
+def send_webapp(path):
+   if path:
+      return send_from_directory('frontend', path)
+   else:
+      return send_from_directory('frontend', 'index.html')
+
 if __name__ == '__main__':
     app.run()
