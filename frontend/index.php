@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>KarmaKoffee</title>
+		<meta name="viewport" content="initial-scale=1.0">
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+		<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
+
+		<script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,dt-1.10.9/datatables.min.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYXTq-J3_53p4s28H_Iud7b9GUlrhWk4o&callback=initMap" async defer></script>
+		<script src="js/main.js" type="text/javascript"></script>
+	</head>
+<body>
+	<script type="text/javascript">
+		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+			$(window).scroll(function() {
+				/*
+				//var y = window.pageYOffset;
+				//var trigger = $('#p1').offset().top();
+				$('.nav a:first-of-type').text(window.pageYOffset);
+				if(200 > window.pageYOffset) {
+					$('.nav').css({'height':'30px;!important'});
+				}
+				else {
+					$('.nav').css({'height':'auto!important'});
+				}
+				*/
+			});
+		}
+	</script>
+	<div id="loadingCont">
+		<div id="fountainG">
+			<div id="fountainG_1" class="fountainG"></div>
+			<div id="fountainG_2" class="fountainG"></div>
+			<div id="fountainG_3" class="fountainG"></div>
+			<div id="fountainG_4" class="fountainG"></div>
+			<div id="fountainG_5" class="fountainG"></div>
+			<div id="fountainG_6" class="fountainG"></div>
+			<div id="fountainG_7" class="fountainG"></div>
+			<div id="fountainG_8" class="fountainG"></div>
+		</div>
+	</div>
+	<div class="logo">KarmaKoffee</div>
+	<div class="nav">
+		<span class="line"></span>
+		<a id="l0" class="selected" onclick="scroll(0);">FIND A STORE NEARBY</a>
+		<br><br>
+		<a id="l1" onclick="scroll(1);">ABOUT THE PROJECT</a>
+		<br><br>
+		<a id="l2" onclick="scroll(2);">LEADERBOARD</a>
+		<br>
+		<div class="onoffswitch">
+			<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+			<label class="onoffswitch-label" for="myonoffswitch"></label>
+		</div>
+		<div id="switchLabel">Available&nbsp;&nbsp;&nbsp;&nbsp;<->&nbsp;&nbsp;&nbsp;&nbsp;Given&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+	</div>
+	<div class="page" id="p0">
+		<div id="map"></div>
+	</div>
+	<div class="page" id="p1">
+		<div class="cont">
+		<div>
+			<h1>Karma Coffee</h1>
+			<p>Perform an act of kindness by buying a second coffee to someone who cannot buy one for themselves.<br><br>A simple gesture can represent a lot to people in need, show them that society still loves them!</p>
+		</div>
+		</div>
+	</div>
+	<div class="page" id="p2">
+		<div class="cont">
+		<div>
+			<h1>Leaderboard</h1>
+			<table id="leaderboard" cellspacing="0">
+			</table>
+		</div>
+		</div>
+	</div>
+	<div class="ftr">
+		<div id="tri"></div>
+	</div>
+</body>
+</html>
