@@ -16,6 +16,8 @@ with openYaml() as stream:
     data = yaml.load(stream)['wsdlUrl']
 aUrl = data["aUrl"]
 
+_coffeesOnHold = 7;
+
 while True:
     try:
         aClient = Client(aUrl)
@@ -32,10 +34,8 @@ while True:
         pass
     print("Client has started successfully")
 
-
 @app.route('/')
 def init():
-    print("YAY")
     c = {'status': False}
     if aClient is not None:
         c['status'] = True
@@ -64,19 +64,25 @@ def getMerchants():
 
 @app.route('/addTransaction', methods=['POST'])
 def addTransaction():
-    print('yo')
-    print(request.form)
     data = json.loads(request.form['coffeeOnHold'])
-    print(data)
     c = {'status':data}
-    return json.dumps(c)
+    _coffeesOnHold = coffeesOnHold+1
+    return str(_coffeesOnHold)
+
+@app.route('/redeemCoffeeOnHold', methods=["POST"])
+def redeemCoffee(): 
+   global _coffeesOnHold
+   _coffeesOnHold = _coffeesOnHold-1; 
+   return str(_coffeesOnHold)
+
+@app.route('/coffeesOnHold')
+def coffeesOnHold(): 
+   return str(_coffeesOnHold)
 
 @app.route('/webapp/<path:path>')
 def send_webapp(path):
-   if path:
-      return send_from_directory('webapp', path)
-   else: 
-      return send_from_directory('webapp', 'index.html')
+   return send_from_directory('webapp', path)
 
 if __name__ == '__main__':
-    app.run()
+   app.debug = True
+   app.run()

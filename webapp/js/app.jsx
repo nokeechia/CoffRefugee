@@ -19,7 +19,8 @@ class Header extends React.Component {
          paddingLeft: 20,
       }
       return <Jumbotron style={style} bsSize='large' className="semi-transparent">
-         <h1>Retail App<br/><small>Transaction manager</small></h1>
+         <h1>Retail App<br/><small>Coffees on hold: {this.props.coffeesOnHold}</small></h1>
+         
       </Jumbotron>
    }
 }
@@ -72,6 +73,7 @@ class TransactionConfirmationModal extends React.Component {
                this.setState({
                   alertContent: <Alert dismissAfter={2000} bsStyle='success'>Success!</Alert>
                })
+               renderPage(m)
                window.setTimeout(this.props.handleClose,2500)
             }, 
             error: e => {
@@ -253,8 +255,23 @@ class VoucherContainer extends React.Component {
       let showModal = () => this.setState({showRedeemModal: true});
       let hideModal = () => this.setState({showRedeemModal: false});
       let handleConfirm = () => {
-         console.log("A coffee was consumed!");
-         hideModal();
+         $.ajax({
+            url: '/redeemCoffeeOnHold', 
+            method: 'POST', 
+            success: m => {
+               this.setState({
+                  alertContent: <Alert dismissAfter={2000} bsStyle='success'>Success!</Alert>
+               })
+               renderPage(m)
+               window.setTimeout(this.props.handleClose,2500)
+            }, 
+            error: e => {
+               this.setState({
+                  alertContent: <Alert dismissAfter={2000} bsStyle='danger'>Error: {e}</Alert>
+               })
+               window.setTimeout(this.props.handleClose,2500)
+            }
+         },this)
       }
       return <Panel className="semi-transparent">
          <BigButton handleClick={showModal}>Redeem Voucher in Pool</BigButton>
@@ -288,11 +305,12 @@ class Footer extends React.Component {
 class Page extends React.Component {
   // The main component that contains the whole page. 
   render() {
+   console.log('on hold: '+this.props.coffeesOnHold)
     return <div>
        <div className="container bodyContainer">
-         <Header />
+         <Header coffeesOnHold={this.props.coffeesOnHold}/>
          <TransactionContainer />
-         <VoucherContainer />
+         <VoucherContainer coffeesInPool={this.props.coffeesOnHold}/>
        </div>
        <div className="container">
          <Footer /> 
@@ -300,10 +318,13 @@ class Page extends React.Component {
     </div>
   }
 };
+Page.defaultProps = {
+   coffeesOnHold: ""
+}
 
 React.render(<Page/>,document.getElementById('container'));
 // Render the page as soon as the page loads, to show all information already present
 
-var webServerAPI = 'http://52.89.240.130:5000'
-
-$.get(webServerAPI,console.log)
+let renderPage = d => React.render(<Page coffeesOnHold={d}/>,document.getElementById('container'))
+$.get('/coffeesOnHold',renderPage)
+window.setInterval(() => $.get('/coffeesOnHold',renderPage),2000);
