@@ -64,15 +64,17 @@ def getMerchants():
 
 @app.route('/addTransaction', methods=['POST'])
 def addTransaction():
+    global _coffeesOnHold
     data = json.loads(request.form['coffeeOnHold'])
     c = {'status':data}
-    _coffeesOnHold = _coffeesOnHold+1
+    if data:
+       _coffeesOnHold += 1
     return str(_coffeesOnHold)
 
 @app.route('/redeemCoffeeOnHold', methods=["POST"])
 def redeemCoffee(): 
    global _coffeesOnHold
-   _coffeesOnHold = _coffeesOnHold-1; 
+   _coffeesOnHold -= 1; 
    return str(_coffeesOnHold)
 
 @app.route('/coffeesOnHold')
