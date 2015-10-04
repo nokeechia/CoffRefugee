@@ -23,3 +23,6 @@ You can simulate a "gifting" event by using the "Redeem Voucher in Pool" button 
 
 Example of the web based location site:
 ![alt text](http://i.imgur.com/qd3X6vT.png "Geo Location of different merchants")
+
+Screenshot of the POS web site:
+![alt text](http://i.imgur.com/q5D8NWN.png "POS for use in the merchant sites")
