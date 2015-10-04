@@ -83,6 +83,13 @@ def coffeesOnHold():
 def send_webapp(path):
    return send_from_directory('webapp', path)
 
+@app.route('/frontend/<path:path>')
+def send_webapp(path):
+   if path:
+      return send_from_directory('frontend', path)
+   else:
+      return send_from_directory('frontend', 'index.html')
+
 if __name__ == '__main__':
    app.debug = True
    app.run()
